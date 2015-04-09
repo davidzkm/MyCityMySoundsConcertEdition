@@ -1,0 +1,7 @@
+{
+	"ipAddressOfOSCServer" : "192.168.230.97",
+	"ipAddressOfNodeJSSocketServer" : "192.168.230.97",
+
+	"portOfOSCServer" : 57121,
+	"portOfNodeJSSocketServer" : 3333
+}
