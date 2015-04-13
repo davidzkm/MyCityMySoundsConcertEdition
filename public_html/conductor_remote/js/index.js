@@ -6,7 +6,7 @@ $(document).ready(function() {
 	$.getJSON('../config.json', null, function(data) {
 		config = data;
 
-		socket = io('http://' + config.ipAddressOfNodeJSSocketServer + ':' + config.portOfNodeJSSocketServer + '/');
+		socket = io(config.addressOfGlobalSocketServer + ':' + config.portOfGlobalSocketServer + '/');
 		socket.on('connect', function () {
 
 		});

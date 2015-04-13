@@ -36,6 +36,9 @@ var sonicEmotionZonesForKarlsruhe = [];
 var cityZones = null;
 var baseURL = 'http://msmk.zkm.de/';
 
+var socketForGlobalActivity = null;
+var socketForLocalActivity = null;
+
 var isMobile = {
 	Android : function() {
 		return navigator.userAgent.match(/Android/i);
@@ -144,109 +147,95 @@ $(document).ready(function() {
 		};
 		cityZones.push(zone1);
 
-		socket = io('http://' + config.ipAddressOfNodeJSSocketServer + ':' + config.portOfNodeJSSocketServer + '/');
-		socket.on('connect', function() {
-			socket.emit('requestMSMKDBDataFromNodeServer');
-		});
+		/*
+		*	init socket for global activity
+		*/
 
-		socket.on('fetchMSMKDBDataForNodeServer', function(data) {
-			$.ajax({
-				type : "POST",
-				url : baseURL + "get_walks_symposium.php",
-				data : {
-					postContext : 'sounds',
-					userContext : null
+		socketForGlobalActivity = io(config.addressOfGlobalSocketServer + ':' + config.portOfGlobalSocketServer);
+		socketForGlobalActivity.on('connect', function() {
+
+			/*
+			*	after successfully connected, request database
+			*/
+
+			socketForGlobalActivity.emit('message', '/dbToClient');
+
+			socketForGlobalActivity.on('message', function(msg) {
+
+				if (msg.length > 1 && msg[0] == '/dbToClient') {
+					var data = msg[1];
+					_sounds = data.sounds;
+					_soundTags = data.sound_tags;
+					clearMarkersAndInfoWindows();
+					createMarkersForSounds(_sounds, _soundTags, null);
 				}
-			}).done(function(data) {
-				var parsedData = $.parseJSON(data);
-				socket.emit('MSMKDBDataToNodeServer', parsedData);
+
+				if (msg.length > 1 && msg[0] == '/updateMarkerColorForSoundsWithTag') {
+
+					var markerColor = msg[1];
+					var tag = msg[2];
+
+					for (var i = 0; i < _sounds.length; i++) {
+						if (tag.trim() == 'alle')
+							_sounds[i].marker_color = 'white';
+						else
+							_sounds[i].marker_color = 'none';
+					}
+
+					for (var i = 0; i < _soundTags.length; i++) {
+
+						for (var j = 0; j < _sounds.length; j++) {
+							if (_sounds[j].sound_id == _soundTags[i].sound_id && _soundTags[i].tag.trim() == tag.trim()) {
+								_sounds[j].marker_color = markerColor;
+							}
+						}
+					}
+
+					clearMarkersAndInfoWindows();
+					createMarkersForSounds(_sounds, _soundTags, null);
+					// io.sockets.emit('soundsToClients', sounds);
+				}
+
+				if (msg.length > 1 && msg[0] == '/displayCategoryStringInColor') {
+
+					if (msg[1] == 'schluss') {
+						$('#concertCategoryOverlayBox').html('');
+						return;
+					}
+
+					var categoryString = '#' + msg[1];
+					var color = msg[2];
+					$('#concertCategoryOverlayBox').html(categoryString);
+					$('#concertCategoryOverlayBox').css('color', color);
+				}
+
+				if (msg.length > 1 && msg[0] == '/updatePlayingStateForID') {
+					$.each(_sounds, function(i, sound) {
+						if (sound.sound_id == msg[1]) {
+							sound.infoWindowOpenCounter = 0;
+							sound.is_playing = msg[2];
+							sound.username = msg[3];
+							sound.marker.setMap(null);
+							createMarkerForSound(sound, null);
+							return 0;
+						}
+					});
+
+					// clearMarkersAndInfoWindows();
+					// createMarkersForSounds(_sounds, _soundTags, null);
+				}
 			});
 		});
 
-		socket.on('MSMKDBDataToClients', function(data) {
+		/*
+		*	init socket for local activity
+		*/
 
-			if (CONSOLE_DEBUG_OUTPUT) {
-				console.log('MSMKDBDataToClients received: ', data);
-			}
-
-			_sounds = data.sounds;
-			_soundTags = data.sound_tags;
-			clearMarkersAndInfoWindows();
-			createMarkersForSounds(_sounds, _soundTags, null);
-		});
-
-		socket.on('soundsToClients', function(sounds) {
-
-			if (CONSOLE_DEBUG_OUTPUT) {
-				console.log('soundsToClients received: ', sounds);
-			}
-
-			_sounds = sounds;
-			clearMarkersAndInfoWindows();
-			createMarkersForSounds(_sounds, _soundTags, null);
-		});
-
-		socket.on('message', function(msg) {
-
-			if (CONSOLE_DEBUG_OUTPUT) {
-				console.log('message received: ', msg);
-			}
-
-			if (msg[0] == '/updateMarkerColorForSoundsWithTag') {
-
-				var markerColor = msg[1];
-				var tag = msg[2];
-
-				for (var i = 0; i < _sounds.length; i++) {
-					if (tag.trim() == 'alle')
-						_sounds[i].marker_color = 'white';
-					else
-						_sounds[i].marker_color = 'none';
-				}
-
-				for (var i = 0; i < _soundTags.length; i++) {
-
-					for (var j = 0; j < _sounds.length; j++) {
-						if (_sounds[j].sound_id == _soundTags[i].sound_id && _soundTags[i].tag.trim() == tag.trim()) {
-							_sounds[j].marker_color = markerColor;
-						}
-					}
-				}
-
-				clearMarkersAndInfoWindows();
-				createMarkersForSounds(_sounds, _soundTags, null);
-				// io.sockets.emit('soundsToClients', sounds);
-			}
-
-			if (msg[0] == '/displayCategoryStringInColor') {
-
-				if (msg[1] == 'schluss') {
-					$('#concertCategoryOverlayBox').html('');
-					return;
-				}
-
-				var categoryString = '#' + msg[1];
-				var color = msg[2];
-				$('#concertCategoryOverlayBox').html(categoryString);
-				$('#concertCategoryOverlayBox').css('color', color);
-			}
-
-			if (msg[0] == '/updatePlayingStateForID') {
-				$.each(_sounds, function(i, sound) {
-					if (sound.sound_id == msg[1]) {
-						sound.infoWindowOpenCounter = 0;
-						sound.is_playing = msg[2];
-						sound.username = msg[3];
-						sound.marker.setMap(null);
-						createMarkerForSound(sound, null);
-						return 0;
-					}
-				});
-
-				// clearMarkersAndInfoWindows();
-				// createMarkersForSounds(_sounds, _soundTags, null);
-			}
-		});
+		// socketForLocalActivity = io(config.addressOfLocalSocketServer + : + config.portOfLocalSocketServer);
+		// socketForLocalActivity.on('connect', function() {
+		// 	socketForLocalActivity.on('message', function(msg) {
+		// 	});
+		// });
 
 		/*
 		 * init + resize map stuff
@@ -487,7 +476,7 @@ function createMarkerForSound(sound, context) {
 			args.push(_username);
 			args.push(soundFileName);
 			args.push(nearestZoneID);
-			socket.emit('message', args);
+			socketForGlobalActivity.emit('message', args);
 
 		});
 	});

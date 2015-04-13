@@ -21,11 +21,11 @@ This is a modification of the MyCity, MySounds project website and mobile app to
 	-> cd to the "public_html" directory and enter "http-server -a (here place the ip of your mac) -p (here place the desired port, default is 8080 if you leave the option)"
 	-> so an example would be http-server -a 192.168.230.97 -p 8080
 
-*	NodeJS Socket Server start
+*	NodeJS - Local Socket Client start
 
 	-> open a terminal
-	-> cd to the directory where the "app.js" file is located
-	-> type "node app.js" 
+	-> cd to the directory where the "local_socket_client.js" file is located
+	-> type "node local_socket_client.js" 
 
 *	Open the concert web site
 
