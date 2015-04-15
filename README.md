@@ -9,6 +9,15 @@ This is a modification of the MyCity, MySounds project website and mobile app to
 	-> after the installation open a terminal and type "sudo npm install socket.io-client", you may have to enter the password of your mac login
 	-> now install node-osc with "sudo npm install node-osc"
 
+*	Max MSP Sound Player Installation and Configuration
+	
+	-> make sure you have the Max 6 Runtime installed (https://cycling74.com/downloads/runtime/)
+	-> go to the subfolder "maxmsp_msmk" of the "MyCityMySoundsConcertEdition" directory
+	-> copy here all the sound files you are going to use in the concert (make sure they have the correct extension .wav and their names are equal to the ones you uploaded to the MyCity, MySounds database. once you fire a sound on the concert website its extension is exchanged from mp3 to wav and the sound gets played by the max patch)
+	-> open a terminal and cd to the "maxmsp_msmk" folder
+	-> enter "ls *wav | ./script_list_soundfiles.sh > msmk_filenames.txt" 
+	-> now you can run the patch "_msmk_main.maxpat" in the runtime
+
 *	Configuration
 
 	-> there is a file called "config.json" in the folder, open it with a text editor
