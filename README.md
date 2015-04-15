@@ -2,24 +2,17 @@
 This is a modification of the MyCity, MySounds project website and mobile app to include the audience in an interactive multichannel sound-map concert.
 
 *	NodeJS Installation
-	(For the concert you need to set up a NodeJS Socket Server which handles all the interactive events and a HTTP Server which hosts the websites)
+	(For the concert you need to set up a NodeJS Web-Socket Client which listens to the interaction on the Web-Socket Server. When a sound file is being played it forwards the message as osc in the local area network.)
 
 	-> go to https://nodejs.org
 	-> hit "Install", download and install the package
-	-> after the installation open a terminal and type "sudo npm install socket.io", you may have to enter the password of your mac login
+	-> after the installation open a terminal and type "sudo npm install socket.io-client", you may have to enter the password of your mac login
 	-> now install node-osc with "sudo npm install node-osc"
-	-> also install the NodeJS http mini-server with "sudo npm install http-server -g"
 
 *	Configuration
 
-	-> there is a file called "config.json" in the "public_html" directory which both the Socket Server and the Web Sites use
-	-> modify this file according your network, replace the correct ip addresses with the ones from your computer where the max patch is running (this one is the OSC Server) and the computer which is hosting the NodeJS servers
-
-*	NodeJS HTTP Server start
-
-	-> open a terminal
-	-> cd to the "public_html" directory and enter "http-server -a (here place the ip of your mac) -p (here place the desired port, default is 8080 if you leave the option)"
-	-> so an example would be http-server -a 192.168.230.97 -p 8080
+	-> there is a file called "config.json" in the folder, open it with a text editor
+	-> modify this file according your network. Replace the correct ip address with the one from your computer where the max patch is running (this one is the OSC Server) 
 
 *	NodeJS - Local Socket Client start
 
@@ -29,9 +22,7 @@ This is a modification of the MyCity, MySounds project website and mobile app to
 
 *	Open the concert web site
 
-	-> make sure your NodeJS servers are running and open a (mobile-) web browser
-	-> type "http://(ip of where you launched your http server)/(port of where you launched your http server)" for instance "http://192.168.230.97:8080/concert"
-	-> there is an automatic forwarding to the concert website so you might also just type "http://192.168.230.97:8080"
+	-> make sure your NodeJS client is running and open a (mobile-) web browser
 	-> Once the Web site is open you are asked to enter a user name
 	-> you can enter any kind of nick name that should be displayed when you enter a sound
 	-> so this web site should also be opened by everyone in the audience who wants to take part in the interactive concert

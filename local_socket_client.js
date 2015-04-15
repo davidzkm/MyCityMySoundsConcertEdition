@@ -4,44 +4,36 @@
 *	when a sound file is played it forwards the message as osc in the local area network
 */
 
-/*
-*	get addresses and ports from config file
-*/
 
-var config = require('./public_html/config.json');
+//	get addresses and ports from config file
 
-/*
-*	connect to eastn bridge as client
-*/
+var config = require('./config.json');
 
-var eastnBridgeServerIO = require('socket.io-client');
-var eastnBridgeServerSocket = eastnBridgeServerIO.connect(config.addressOfGlobalSocketServer + ':' + config.portOfGlobalSocketServer);
+//	connect to eastn bridge as client
 
-/*
-*	create osc client
-*/
+var socketClientIO = require('socket.io-client');
+var socket = socketClientIO.connect(config.addressOfGlobalSocketServer + ':' + config.portOfGlobalSocketServer);
+
+//	create osc client
 
 var osc = require('node-osc');
 var oscClient = new osc.Client(config.ipAddressOfOSCServer, config.portOfOSCServer); 
 
-/*
-*	eastnBridgeServer Socket handler
-*/
+//	eastnBridgeServer Socket handler
 
-eastnBridgeServerSocket.on('connect', function() {
+socket.on('connect', function() {
 
 	console.log('connected');
 
-	eastnBridgeServerSocket.on('message', function(msg) {
+	socket.on('message', function(msg) {
 
 		console.log(msg);
 
 		if (msg.length > 1 && msg[0] == '/playSoundWithID') {
 
-			/*
-			*	send osc message
-			*/
-
+			
+			//	send osc message
+			
 			oscClient.send("/msmk_play", msg[3], msg[4]);
 		}
 	}); 
