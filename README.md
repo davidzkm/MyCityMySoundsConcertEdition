@@ -40,7 +40,7 @@ This is a modification of the MyCity, MySounds project website and mobile app to
 *	Open the conductor remote
 
 	-> this is only for the conductor who controls which categories are highlighted at certain points in time.
-	-> in a separate (mobile-) browser window type the previously mentioned address but instead of "concert" type "conductor_remote"
+	-> in a separate (mobile-) browser window type the previously mentioned address with the additional path entry "remote"
 	-> once you click on a certain cetegory the respective markers are shown on the map	
 
 *	Trouble Shooting
