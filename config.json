@@ -3,5 +3,5 @@
 	"portOfOSCServer" : 57121,
 
 	"addressOfGlobalSocketServer" : "http://msmk.zkm.de",
-	"portOfGlobalSocketServer" : 3333
+	"portOfGlobalSocketServer" : 3334
 }

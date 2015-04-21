@@ -29,19 +29,19 @@ This is a modification of the MyCity, MySounds project website and mobile app to
 	-> cd to the directory where the "local_socket_client.js" file is located
 	-> type "node local_socket_client.js" 
 
-*	Open the concert web site
+*	Open the concert web site (also have a look in the screen recordings folder)
 
 	-> make sure your NodeJS client is running and open a (mobile-) web browser
-	-> Once the Web site is open you are asked to enter a user name
+	-> Once the Web site (http://mycity-mysounds.zkm.de/concert_eastn) is open you are asked to enter a user name
 	-> you can enter any kind of nick name that should be displayed when you enter a sound
 	-> so this web site should also be opened by everyone in the audience who wants to take part in the interactive concert
 	-> there is one secret name though that is used by the front projection that is visible to everyone in the audience and should be set up for those who don't have a mobile device and just want to follow the interaction. this name is "ima_beamer" and the map content is displayed a bit different from the others.. the sound categories are shown as well as the map centers each sound event automatically
 
-*	Open the conductor remote
+*	Open the conductor remote (also have a look in the screen recordings folder)
 
 	-> this is only for the conductor who controls which categories are highlighted at certain points in time.
-	-> in a separate (mobile-) browser window type the previously mentioned address with the additional path entry "remote"
-	-> once you click on a certain cetegory the respective markers are shown on the map	
+	-> in a separate (mobile-) browser window type the previously mentioned address with the additional path entry "remote" (http://mycity-mysounds.zkm.de/concert_eastn/remote)
+	-> once you click on a certain cetegory the respective markers are shown on the map. This happens on all the clients: mobile devices, computers and the front projection
 
 *	Trouble Shooting
 
