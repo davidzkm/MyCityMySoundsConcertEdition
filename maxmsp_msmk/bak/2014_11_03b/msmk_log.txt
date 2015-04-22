@@ -1,6 +1,0 @@
-
-
-* 2014/11/03
-- reihenfolge geaendert: erst cue-number bestimmen, dann player auswaehlen
-  (andernfalls: wenn per osc-msg ein unbekannter soundfile-name geschickt wurde,
-  dann wurde das letzte bekannte soundfile gespielt; jetzt neu: )

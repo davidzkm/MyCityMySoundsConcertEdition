@@ -1,7 +1,0 @@
-{
-	"ipAddressOfOSCServer" : "192.168.230.97",
-	"portOfOSCServer" : 57121,
-
-	"addressOfGlobalSocketServer" : "http://msmk.zkm.de",
-	"portOfGlobalSocketServer" : 3334
-}
